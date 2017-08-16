@@ -20,6 +20,7 @@ define(function (require, exports, module) {
         Commands             = brackets.getModule("command/Commands"),
         FileSystem           = brackets.getModule("filesystem/FileSystem"),
         Browser              = require("lib/iframe-browser"),
+        BrowserBoard         = require("lib/iframe-browser-board"),
         UI                   = require("lib/UI"),
         Launcher             = require("lib/launcher"),
         NoHost               = require("nohost/main"),
@@ -45,17 +46,18 @@ define(function (require, exports, module) {
 
     function startLiveDev() {
         // Turn preview iFrame On
-        Browser.init();
+        BrowserBoard.init();
 
         // Flip livedev.multibrowser to true
-        var prefs = PreferencesManager.getExtensionPrefs("livedev");
-        prefs.set("multibrowser", true);
+        //var prefs = PreferencesManager.getExtensionPrefs("livedev");
+        //prefs.set("multibrowser", true);
 
         // Register servers
         NoHost.init();
 
         // Set up our transport and plug it into live-dev
-        PostMessageTransport.setIframe(Browser.getBrowserIframe());
+        //PostMessageTransport.setIframe(BrowserBoard.getBrowserIframe());
+        /*
         LiveDevelopment.setTransport(PostMessageTransport);
 
         // Set up our launcher in a similar manner
@@ -65,6 +67,12 @@ define(function (require, exports, module) {
         }));
 
         LiveDevelopment.open();
+        */
+        var launcher = new Launcher({
+            browser: BrowserBoard,
+            server: NoHost.getHTMLServer()
+        });
+        launcher.launch(); 
     }
 
     function finishStartup(err) {

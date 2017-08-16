@@ -53,9 +53,19 @@ define(function (require, exports, module) {
         });
     }
 
+    function _launchBoard(url, callback) {
+        var server = _launcherInstance.server;
+        var browser = _launcherInstance.browser;
+
+        callback = callback || function(){};
+
+        browser.update('http://127.0.0.1:8000/README.md');
+        callback();
+    }
+
     Launcher.prototype.launch = function(url, callback) {
         if(!Tutorial.getOverride()) {
-            return _launch(url, callback);
+            return _launchBoard(url, callback);
         }
 
         // Hijack the preview loading if we're meant to be showing the tutorial.
@@ -68,7 +78,7 @@ define(function (require, exports, module) {
                 // Swap out the tutorial url and reload if necessary. We try hard
                 // not to reload unless we have to, so the tutorial doesn't flicker.
                 if(Tutorial.shouldReload()) {
-                    _launch(Tutorial.getPath(), callback);
+                    _launchBoard(Tutorial.getPath(), callback);
                 }
             }
         });
